@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Button from '../components/Button.astro';
+import Tag from '../components/Tag.astro';
+import { getCertifications, getSettings } from '../lib/data';
+
+const [certs, settings] = await Promise.all([getCertifications(), getSettings()]);
+
+const toolGroups: { group: string; tools: string[] }[] = [
+  { group: 'AI generation', tools: ['Higgsfield', 'GPT Image 2', 'Claude Code', 'ElevenLabs'] },
+  { group: 'Design', tools: ['Illustrator', 'InDesign', 'Photoshop', 'Figma'] },
+  { group: 'Motion & video', tools: ['After Effects', 'Premiere Pro'] },
+  { group: 'Documents & decks', tools: ['PowerPoint', 'Word', 'Acrobat'] },
+];
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Ahmed Albadri',
+  alternateName: 'أحمد البدري',
+  jobTitle: 'AI-First Graphic Designer & Multimedia Specialist',
+  email: `mailto:${settings.email}`,
+  url: new URL('/about', Astro.site).toString(),
+};
+---
+
+<Base
+  title="About — Ahmed Albadri"
+  description="Ahmed Albadri is an AI-first graphic designer and multimedia specialist based in Riyadh/Doha, working across the Middle East."
+  schema={personSchema}
+>
+  <section class="mx-auto max-w-container px-6 pb-24 pt-16 lg:px-8">
+    <!-- BioBlock -->
+    <header class="hero-fade max-w-prose">
+      <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+        <h1 class="font-display text-3xl md:text-4xl">About</h1>
+        <span lang="ar" dir="rtl" class="text-xl text-bronze-500">نبذة</span>
+      </div>
+      <p class="mt-8 text-lg leading-relaxed text-ink-2">
+        I'm Ahmed Albadri <span lang="ar" dir="rtl" class="text-bronze-700">أحمد البدري</span> — a
+        graphic designer and multimedia specialist working between Riyadh and Doha. My work sits
+        where editorial design discipline meets AI-first production: video explainers, executive
+        presentations, bilingual documents and design systems for organisations that need
+        government-grade polish.
+      </p>
+      <p class="mt-4 leading-relaxed text-ink-2">
+        AI-first doesn't mean pressing generate. It means locked reference systems, versioned
+        prompts and quality control that would satisfy a brand guardian — process you can audit,
+        documented in the <a href="/ai-lab" class="link-underline text-bronze-700">AI Lab</a>. The
+        agentic side of the workflow — the Claude skills I build and run — lives on the
+        <a href="/skills" class="link-underline text-bronze-700">Skills</a> page.
+      </p>
+      <div class="mt-10">
+        <Button href="/cv.pdf">Download CV</Button>
+      </div>
+    </header>
+
+    <!-- ToolStack -->
+    <section class="mt-24" aria-labelledby="toolstack">
+      <SectionHeading en="Tool Stack" ar="أدوات العمل" id="toolstack" />
+      <dl class="grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2">
+        {
+          toolGroups.map(({ group, tools }) => (
+            <div class="reveal bg-paper p-6">
+              <dt class="text-xs font-medium uppercase tracking-lockup text-bronze-700">{group}</dt>
+              <dd class="mt-4 flex flex-wrap gap-2">
+                {tools.map((t) => (
+                  <Tag>{t}</Tag>
+                ))}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <!-- CertGrid -->
+    <section class="mt-24" aria-labelledby="certs">
+      <SectionHeading en="Certifications" ar="الشهادات" id="certs" />
+      <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          certs.map((cert) => (
+            <li class="reveal rounded-md border border-line bg-paper-2 p-6">
+              {cert.badge && (
+                <img
+                  src={cert.badge.src}
+                  alt={cert.badge.alt}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-24 w-24 rounded-sm border border-line object-cover"
+                />
+              )}
+              <h3 class="mt-4 font-display text-lg">{cert.name}</h3>
+              <p class="mt-1 text-sm text-ink-2">
+                {cert.issuer}
+                {cert.year && ` · ${cert.year}`}
+              </p>
+              {cert.verifyUrl && (
+                <a
+                  href={cert.verifyUrl}
+                  rel="noopener"
+                  class="link-underline mt-3 inline-block text-sm font-medium text-bronze-700"
+                >
+                  Verify
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </section>
+</Base>

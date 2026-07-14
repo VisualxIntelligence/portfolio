@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import WorkGrid from '../../components/WorkGrid.astro';
+import { getCategories, getProjects } from '../../lib/data';
+
+const [categories, projects] = await Promise.all([getCategories(), getProjects()]);
+---
+
+<Base
+  title="Work — Ahmed Albadri"
+  description="All work: video explainers, presentations, strategy documents, design systems, storyboards and AI Lab studies — filterable by category."
+>
+  <section class="mx-auto max-w-container px-6 pb-24 pt-16 lg:px-8">
+    <header class="hero-fade mb-16">
+      <div class="flex flex-wrap items-baseline justify-between gap-4">
+        <h1 class="font-display text-3xl md:text-4xl">Work</h1>
+        <span lang="ar" dir="rtl" class="text-xl text-bronze-500">الأعمال</span>
+      </div>
+      <p class="mt-4 max-w-prose text-ink-2">
+        Everything in one grid. Self-initiated concepts are always labeled — what you see is what
+        was really made, and how.
+      </p>
+    </header>
+    <WorkGrid {categories} {projects} />
+  </section>
+</Base>

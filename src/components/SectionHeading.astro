@@ -1,0 +1,16 @@
+---
+/** Editorial section heading: EN display + AR accent pair over a hairline (spec §2.4). */
+interface Props {
+  en: string;
+  ar?: string;
+  level?: 'h2' | 'h3';
+  id?: string;
+}
+const { en, ar, level = 'h2', id } = Astro.props;
+const Tag = level;
+---
+
+<div class="reveal mb-12 flex items-baseline justify-between gap-6 border-b border-line pb-4">
+  <Tag {id} class="font-display text-2xl md:text-3xl">{en}</Tag>
+  {ar && <span lang="ar" dir="rtl" class="shrink-0 text-lg text-bronze-500 md:text-xl">{ar}</span>}
+</div>

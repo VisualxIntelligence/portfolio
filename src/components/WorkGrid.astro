@@ -1,0 +1,102 @@
+---
+/** FilterChips + ProjectGrid island (vanilla JS, spec §1.5).
+ *  One-active-at-a-time chips with aria-pressed; filtering happens client-side
+ *  on the already-rendered static grid. */
+import type { Category, Project } from '../lib/types';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  categories: Category[];
+  projects: Project[];
+}
+const { categories, projects } = Astro.props;
+---
+
+<div
+  id="filter-chips"
+  role="toolbar"
+  aria-label="Filter projects by category"
+  class="reveal mb-12 flex flex-wrap gap-2"
+>
+  <button
+    type="button"
+    data-filter="all"
+    aria-pressed="true"
+    class="chip rounded-full border border-line px-4 py-2 text-sm font-medium transition-colors duration-hover ease-editorial hover:border-bronze-500"
+  >
+    All
+  </button>
+  {
+    categories.map((c) => (
+      <button
+        type="button"
+        data-filter={c.slug}
+        aria-pressed="false"
+        class="chip rounded-full border border-line px-4 py-2 text-sm font-medium transition-colors duration-hover ease-editorial hover:border-bronze-500"
+      >
+        {c.title}
+      </button>
+    ))
+  }
+</div>
+
+<div id="project-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+  {projects.map((p, i) => <ProjectCard project={p} eager={i < 3} />)}
+</div>
+
+<p id="empty-state" hidden class="rounded-md border border-line bg-paper-2 px-6 py-16 text-center text-ink-2">
+  No projects in this category yet — new work is added regularly.
+</p>
+
+<p id="filter-status" class="sr-only" role="status" aria-live="polite"></p>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#filter-chips .chip');
+  const cards = document.querySelectorAll<HTMLElement>('#project-grid .project-card');
+  const empty = document.getElementById('empty-state')!;
+  const grid = document.getElementById('project-grid')!;
+  const status = document.getElementById('filter-status')!;
+
+  function applyFilter(slug: string) {
+    let shown = 0;
+    cards.forEach((card) => {
+      const show = slug === 'all' || card.dataset.category === slug;
+      card.toggleAttribute('hidden', !show);
+      if (show) {
+        shown++;
+        card.classList.add('is-visible'); // re-revealed cards should not stay transparent
+      }
+    });
+    empty.hidden = shown > 0;
+    grid.hidden = shown === 0;
+    status.textContent = `${shown} project${shown === 1 ? '' : 's'} shown`;
+    chips.forEach((chip) => {
+      const active = chip.dataset.filter === slug;
+      chip.setAttribute('aria-pressed', String(active));
+      chip.classList.toggle('chip-active', active);
+    });
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const slug = chip.dataset.filter!;
+      applyFilter(slug);
+      const url = new URL(location.href);
+      if (slug === 'all') url.searchParams.delete('category');
+      else url.searchParams.set('category', slug);
+      history.replaceState(null, '', url);
+    }),
+  );
+
+  // Deep-link support: /work?category=video-explainers
+  const initial = new URLSearchParams(location.search).get('category');
+  if (initial && [...chips].some((c) => c.dataset.filter === initial)) applyFilter(initial);
+</script>
+
+<style>
+  .chip[aria-pressed='true'] {
+    background-color: var(--bronze);
+    border-color: var(--bronze);
+    color: var(--paper);
+  }
+</style>

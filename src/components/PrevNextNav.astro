@@ -1,0 +1,41 @@
+---
+import type { Project } from '../lib/types';
+
+interface Props {
+  prev?: Project;
+  next?: Project;
+  basePath?: string;
+}
+const { prev, next, basePath = '/work' } = Astro.props;
+---
+
+<nav aria-label="More projects" class="mt-24 grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2">
+  <div class="bg-paper-2 p-6">
+    {
+      prev ? (
+        <a href={`${basePath}/${prev.slug}`} class="group block">
+          <span class="text-xs font-medium uppercase tracking-lockup text-neutral-500">← Previous</span>
+          <span class="mt-2 block font-display text-lg transition-colors duration-hover ease-editorial group-hover:text-bronze-700">
+            {prev.title}
+          </span>
+        </a>
+      ) : (
+        <span class="text-sm text-neutral-500">Start of the archive</span>
+      )
+    }
+  </div>
+  <div class="bg-paper-2 p-6 text-end">
+    {
+      next ? (
+        <a href={`${basePath}/${next.slug}`} class="group block">
+          <span class="text-xs font-medium uppercase tracking-lockup text-neutral-500">Next →</span>
+          <span class="mt-2 block font-display text-lg transition-colors duration-hover ease-editorial group-hover:text-bronze-700">
+            {next.title}
+          </span>
+        </a>
+      ) : (
+        <span class="text-sm text-neutral-500">End of the archive</span>
+      )
+    }
+  </div>
+</nav>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#1A1815"/>
+  <line x1="48" y1="72" x2="1872" y2="72" stroke="#2B2723" stroke-width="1"/>
+  <line x1="48" y1="1008" x2="1872" y2="1008" stroke="#2B2723" stroke-width="1"/>
+  
+      <path d="M 620 500 C 720 380, 840 620, 960 500 S 1200 380, 1300 500" fill="none" stroke="#A9744A" stroke-width="2.5"/>
+      <path d="M 620 550 C 720 430, 840 670, 960 550 S 1200 430, 1300 550" fill="none" stroke="#C89B72" stroke-width="1.5"/>
+  <text x="48" y="52" font-family="Space Grotesk, Arial, sans-serif" font-size="22" letter-spacing="2" fill="#C89B72">SHOWREEL MONTAGE</text>
+  <text x="1872" y="52" text-anchor="end" font-family="IBM Plex Sans Arabic, Arial, sans-serif" font-size="24" fill="#F7F4EF">مونتاج</text>
+  <text x="48" y="1046" font-family="Inter, Arial, sans-serif" font-size="16" fill="#C89B72">Placeholder plate — replace via Sanity Studio</text>
+</svg>

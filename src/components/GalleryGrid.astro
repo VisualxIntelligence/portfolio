@@ -1,0 +1,67 @@
+---
+/** Gallery with shared lightbox dialog (LightboxPlayer island, vanilla JS). */
+import type { Img } from '../lib/types';
+
+interface Props {
+  images: Img[];
+}
+const { images } = Astro.props;
+---
+
+{
+  images.length > 0 && (
+    <div class="gallery grid gap-6 sm:grid-cols-2">
+      {images.map((image) => (
+        <button
+          type="button"
+          class="reveal group block overflow-hidden rounded-md border border-line bg-paper-2 text-start"
+          data-full={image.src}
+          data-alt={image.alt}
+          aria-label={`Enlarge image: ${image.alt}`}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={image.width ?? 1600}
+            height={image.height ?? 1000}
+            loading="lazy"
+            decoding="async"
+            class="aspect-[16/10] h-auto w-full object-cover transition-transform duration-reveal ease-editorial group-hover:scale-[1.02]"
+          />
+        </button>
+      ))}
+    </div>
+  )
+}
+
+<dialog
+  id="lightbox"
+  class="m-auto w-[min(96vw,1100px)] rounded-md border border-line bg-paper p-2 backdrop:bg-ink/80"
+>
+  <img id="lightbox-img" src="" alt="" class="max-h-[85vh] w-full rounded-sm object-contain" />
+  <form method="dialog" class="absolute end-4 top-4">
+    <button
+      class="grid h-10 w-10 place-items-center rounded-full bg-ink text-paper transition-colors duration-hover ease-editorial hover:bg-bronze-700"
+      aria-label="Close image"
+    >
+      ✕
+    </button>
+  </form>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  if (dialog && img) {
+    document.querySelectorAll<HTMLButtonElement>('.gallery [data-full]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        img.src = btn.dataset.full!;
+        img.alt = btn.dataset.alt ?? '';
+        dialog.showModal();
+      });
+    });
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close(); // click on backdrop
+    });
+  }
+</script>

@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { getProjects } from '../../lib/data';
+import type { Project } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, prev: projects[i + 1], next: projects[i - 1] },
+  }));
+}
+
+interface Props {
+  project: Project;
+  prev?: Project;
+  next?: Project;
+}
+const { project, prev, next } = Astro.props;
+
+const schema: Record<string, any> = {
+  '@context': 'https://schema.org',
+  '@type': project.heroVideoUrl ? 'VideoObject' : 'CreativeWork',
+  name: project.title,
+  description: project.summary,
+  creator: { '@type': 'Person', name: 'Ahmed Albadri' },
+  ...(project.year ? { dateCreated: String(project.year) } : {}),
+  ...(project.heroVideoUrl
+    ? {
+        contentUrl: project.heroVideoUrl,
+        uploadDate: project.publishedAt,
+        thumbnailUrl: project.heroImage?.src,
+      }
+    : {}),
+};
+---
+
+<Base
+  title={`${project.title} — Ahmed Albadri`}
+  description={project.summary ?? project.title}
+  ogImage={project.heroImage?.src}
+  type="article"
+  {schema}
+>
+  <CaseStudy {project} {prev} {next} basePath="/work" showProcess={false} />
+</Base>

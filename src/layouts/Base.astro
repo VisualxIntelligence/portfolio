@@ -1,0 +1,86 @@
+---
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/ibm-plex-sans-arabic/400.css';
+import '@fontsource/ibm-plex-sans-arabic/500.css';
+import '@fontsource/ibm-plex-sans-arabic/700.css';
+import '../styles/global.css';
+
+import SEOHead from '../components/SEOHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getSettings } from '../lib/data';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  schema?: Record<string, any> | Record<string, any>[];
+}
+
+const { title, description, ogImage, type, schema } = Astro.props;
+const settings = await getSettings();
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Progressive enhancement gate: reveal styling only applies when JS runs.
+      document.documentElement.classList.add('js');
+    </script>
+    <SEOHead {title} {description} {ogImage} {type} {schema} />
+  </head>
+  <body class="min-h-screen bg-paper font-body text-base text-ink">
+    <a
+      href="#main"
+      class="fixed start-4 top-4 z-50 -translate-y-24 rounded-sm bg-ink px-4 py-2 text-sm text-paper transition-transform focus:translate-y-0"
+    >
+      Skip to content
+    </a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer {settings} />
+
+    <script>
+      // Scroll reveal — opacity + translateY(8px), honors prefers-reduced-motion (spec §2.5).
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if (reduced || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        let fired = false;
+        const io = new IntersectionObserver(
+          (entries) => {
+            fired = true;
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                (entry.target as HTMLElement).classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+        items.forEach((el) => io.observe(el));
+        // Safety net: if the observer never delivers (broken embedder), show everything.
+        setTimeout(() => {
+          if (!fired) items.forEach((el) => el.classList.add('is-visible'));
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

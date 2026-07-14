@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#EFEAE2"/>
+  <line x1="48" y1="72" x2="752" y2="72" stroke="#DDD5C9" stroke-width="1"/>
+  <line x1="48" y1="728" x2="752" y2="728" stroke="#DDD5C9" stroke-width="1"/>
+  
+      <circle cx="400" cy="360" r="224.00000000000003" fill="none" stroke="#A9744A" stroke-width="2"/>
+      <ellipse cx="400" cy="360" rx="336" ry="128" fill="none" stroke="#7E5334" stroke-width="1.5" transform="rotate(-18 400 360)"/>
+      <circle cx="716" cy="256" r="10" fill="#A9744A"/>
+      <circle cx="400" cy="360" r="5" fill="#1A1815"/>
+  <text x="48" y="52" font-family="Space Grotesk, Arial, sans-serif" font-size="22" letter-spacing="2" fill="#7E5334">CERTIFICATION</text>
+  <text x="752" y="52" text-anchor="end" font-family="IBM Plex Sans Arabic, Arial, sans-serif" font-size="24" fill="#1A1815">شهادة</text>
+  <text x="48" y="766" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4A4540">Placeholder plate — replace via Sanity Studio</text>
+</svg>

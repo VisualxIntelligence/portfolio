@@ -1,0 +1,61 @@
+---
+/** Before/after comparison island — a range input drives a clip-path, so it is
+ *  natively keyboard-accessible (arrow keys) and screen-reader friendly. */
+import type { Img } from '../lib/types';
+
+interface Props {
+  before: Img;
+  after: Img;
+}
+const { before, after } = Astro.props;
+---
+
+<figure class="reveal ba-slider relative overflow-hidden rounded-md border border-line">
+  <img
+    src={before.src}
+    alt={before.alt}
+    width={before.width ?? 1200}
+    height={before.height ?? 750}
+    loading="lazy"
+    decoding="async"
+    class="block aspect-[16/10] w-full object-cover"
+  />
+  <img
+    src={after.src}
+    alt={after.alt}
+    width={after.width ?? 1200}
+    height={after.height ?? 750}
+    loading="lazy"
+    decoding="async"
+    class="ba-after absolute inset-0 aspect-[16/10] h-full w-full object-cover"
+    style="clip-path: inset(0 0 0 50%);"
+  />
+  <span class="ba-handle pointer-events-none absolute inset-y-0 w-px bg-paper" style="left: 50%;">
+    <span class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-paper px-2 py-1 text-xs font-medium text-ink shadow-sm">⇄</span>
+  </span>
+  <span class="absolute start-3 top-3 rounded-sm bg-ink/85 px-2 py-1 text-xs font-medium text-paper">Before</span>
+  <span class="absolute end-3 top-3 rounded-sm bg-bronze-700/95 px-2 py-1 text-xs font-medium text-paper">After</span>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    step="1"
+    aria-label="Reveal before/after comparison"
+    class="ba-range absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+  />
+  <figcaption class="sr-only">Before: {before.alt}. After: {after.alt}.</figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.ba-slider').forEach((fig) => {
+    const range = fig.querySelector<HTMLInputElement>('.ba-range')!;
+    const afterImg = fig.querySelector<HTMLElement>('.ba-after')!;
+    const handle = fig.querySelector<HTMLElement>('.ba-handle')!;
+    range.addEventListener('input', () => {
+      const v = Number(range.value);
+      afterImg.style.clipPath = `inset(0 0 0 ${v}%)`;
+      handle.style.left = `${v}%`;
+    });
+  });
+</script>

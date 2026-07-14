@@ -1,0 +1,47 @@
+---
+import type { SiteSettings } from '../lib/types';
+
+interface Props {
+  settings: SiteSettings;
+}
+const { settings } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line bg-paper-2">
+  <div class="mx-auto max-w-container px-6 py-16 lg:px-8">
+    <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="font-display text-xl">Ahmed Albadri</p>
+        <p lang="ar" dir="rtl" class="mt-1 text-lg text-bronze-700">أحمد البدري</p>
+        <p class="mt-4 max-w-prose text-sm text-ink-2">{settings.footerLine}</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="flex flex-wrap items-center gap-6">
+          <li>
+            <a class="link-underline text-sm font-medium hover:text-bronze-700" href={`mailto:${settings.email}`}>
+              {settings.email}
+            </a>
+          </li>
+          {
+            settings.socials.map((s) => (
+              <li>
+                <a
+                  class="link-underline text-sm font-medium hover:text-bronze-700"
+                  href={s.url}
+                  rel="noopener"
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+    <div class="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-neutral-500 sm:flex-row sm:justify-between">
+      <p>© {year} Ahmed Albadri. All fictional client work is clearly labeled.</p>
+      <p>Site built AI-first with Claude Code · Astro · Sanity</p>
+    </div>
+  </div>
+</footer>

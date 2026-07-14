@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#EFEAE2"/>
+  <line x1="48" y1="72" x2="1552" y2="72" stroke="#DDD5C9" stroke-width="1"/>
+  <line x1="48" y1="928" x2="1552" y2="928" stroke="#DDD5C9" stroke-width="1"/>
+  
+      <rect x="500" y="320" width="180" height="120" fill="none" stroke="#A9744A" stroke-width="2"/>
+      <rect x="710" y="290" width="180" height="120" fill="none" stroke="#7E5334" stroke-width="1.5"/>
+      <rect x="920" y="320" width="180" height="120" fill="none" stroke="#A9744A" stroke-width="2"/>
+      <path d="M 590 520 L 650 590 L 710 520" fill="none" stroke="#1A1815" stroke-width="2"/>
+      <line x1="500" y1="590" x2="1100" y2="590" stroke="#DDD5C9" stroke-width="1"/>
+  <text x="48" y="52" font-family="Space Grotesk, Arial, sans-serif" font-size="22" letter-spacing="2" fill="#7E5334">BEFORE — RAW GENERATION</text>
+  <text x="1552" y="52" text-anchor="end" font-family="IBM Plex Sans Arabic, Arial, sans-serif" font-size="24" fill="#1A1815">قبل</text>
+  <text x="48" y="966" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4A4540">Placeholder plate — replace via Sanity Studio</text>
+</svg>

@@ -1,0 +1,21 @@
+---
+/** Non-negotiable honesty badge for self-initiated/spec work (spec §0). */
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+---
+
+<p
+  class:list={[
+    'inline-flex items-center gap-2 rounded-sm border border-bronze-500 bg-paper px-3 py-1.5 text-xs font-medium text-bronze-700',
+    className,
+  ]}
+>
+  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <circle cx="6" cy="6" r="5" stroke="currentColor" />
+    <path d="M6 3.5v3l2 1.5" stroke="currentColor" stroke-linecap="round" />
+  </svg>
+  {label}
+</p>

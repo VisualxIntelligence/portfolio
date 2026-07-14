@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import HonestyLabel from '../../components/HonestyLabel.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { getAiLabProjects } from '../../lib/data';
+import { HONESTY_LABEL } from '../../lib/seed';
+
+const projects = await getAiLabProjects();
+---
+
+<Base
+  title="AI Lab — Ahmed Albadri"
+  description="Self-initiated AI-generated samples with documented process: prompt development, consistency systems and quality control. Home of the fictional MADAR LOOP programme."
+>
+  <section class="mx-auto max-w-container px-6 pb-24 pt-16 lg:px-8">
+    <header class="hero-fade mb-16 max-w-prose">
+      <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+        <h1 class="font-display text-3xl md:text-4xl">AI Lab</h1>
+        <span lang="ar" dir="rtl" class="text-xl text-bronze-500">مختبر الذكاء الاصطناعي</span>
+      </div>
+      <p class="mt-6 text-lg text-ink-2">
+        The lab's flagship is <strong class="text-ink">MADAR LOOP</strong>
+        <span lang="ar" dir="rtl" class="text-bronze-700">حلقة المدار</span> — a fictional orbital
+        transit programme in an unnamed Gulf capital, invented so every deliverable type in a real
+        programme could be produced and documented end-to-end.
+      </p>
+      <p class="mt-4 text-ink-2">
+        Each study records the full chain: brief → prompt development → consistency system → QC →
+        final. Nothing is passed off as client work.
+      </p>
+      <HonestyLabel label={HONESTY_LABEL} class="mt-8" />
+    </header>
+
+    <SectionHeading en="Lab Studies" ar="دراسات المختبر" />
+    <div class="grid gap-8 sm:grid-cols-2">
+      {projects.map((p) => <ProjectCard project={p} basePath="/ai-lab" />)}
+    </div>
+  </section>
+</Base>

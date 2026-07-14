@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import { getCategories, getFeaturedProjects, getSettings } from '../lib/data';
+
+const [settings, featured, categories] = await Promise.all([
+  getSettings(),
+  getFeaturedProjects(),
+  getCategories(),
+]);
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Ahmed Albadri',
+  alternateName: 'أحمد البدري',
+  jobTitle: 'AI-First Graphic Designer & Multimedia Specialist',
+  email: `mailto:${settings.email}`,
+  url: Astro.site?.toString(),
+  workLocation: { '@type': 'Place', name: 'Riyadh / Doha, Middle East' },
+};
+---
+
+<Base
+  title="Ahmed Albadri — AI-First Graphic Designer & Multimedia Specialist"
+  description="Portfolio of Ahmed Albadri: video explainers, executive presentations, bilingual documents, design systems and AI-generated work with documented process rigor."
+  schema={personSchema}
+>
+  <!-- HeroLockup -->
+  <section class="mx-auto max-w-container px-6 pb-24 pt-24 lg:px-8 lg:pt-32">
+    <div class="hero-fade">
+      <p class="flex items-center gap-4 text-xs font-medium uppercase tracking-lockup text-bronze-700">
+        <span class="h-px w-12 bg-bronze-500" aria-hidden="true"></span>
+        AI-First Graphic Designer · Multimedia Specialist
+      </p>
+      <h1 class="mt-8 max-w-[16ch] font-display text-4xl md:text-5xl">
+        {settings.heroHeadline}
+      </h1>
+      {
+        settings.heroHeadlineAr && (
+          <p lang="ar" dir="rtl" class="mt-6 max-w-[30ch] text-start text-xl text-bronze-500 md:text-2xl">
+            {settings.heroHeadlineAr}
+          </p>
+        )
+      }
+      <p class="mt-8 max-w-prose text-lg text-ink-2">
+        Video explainers, executive presentations, bilingual documents and design systems — plus a
+        lab of self-initiated AI work where every prompt, consistency pass and QC decision is
+        documented, not hidden.
+      </p>
+      <div class="mt-12 flex flex-wrap gap-4">
+        <Button href="/work">View the work</Button>
+        <Button href="/ai-lab" variant="ghost">Enter the AI Lab</Button>
+      </div>
+    </div>
+
+    <!-- MontagePlayer: poster-first, click to play (muted showreel) -->
+    <div class="mt-24">
+      {
+        settings.montageVideoUrl ? (
+          <VideoEmbed
+            url={settings.montageVideoUrl}
+            title="Showreel montage"
+            poster="/placeholders/montage-poster.svg"
+            class="reveal"
+          />
+        ) : (
+          <div class="reveal relative aspect-video overflow-hidden rounded-md border border-line">
+            <img
+              src="/placeholders/montage-poster.svg"
+              alt="Showreel montage placeholder — set the montage video URL in Site Settings"
+              class="h-full w-full object-cover"
+              width="1920"
+              height="1080"
+              loading="eager"
+              decoding="async"
+            />
+            <span class="absolute bottom-4 start-4 rounded-sm bg-ink/85 px-3 py-1.5 text-xs font-medium text-paper">
+              Showreel coming online — montage URL is set in Site Settings
+            </span>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- FeaturedRow -->
+  <section class="mx-auto max-w-container px-6 py-24 lg:px-8" aria-labelledby="featured">
+    <SectionHeading en="Featured Work" ar="أعمال مختارة" id="featured" />
+    <div class="grid gap-8 sm:grid-cols-2">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+    <div class="reveal mt-12">
+      <Button href="/work" variant="ghost">All work</Button>
+    </div>
+  </section>
+
+  <!-- CategoryShortcuts -->
+  <section class="border-y border-line bg-paper-2" aria-labelledby="categories">
+    <div class="mx-auto max-w-container px-6 py-24 lg:px-8">
+      <SectionHeading en="Explore by Category" ar="تصفح حسب الفئة" id="categories" />
+      <ul class="grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+        {
+          categories.map((c) => (
+            <li class="reveal bg-paper">
+              <a
+                href={`/work?category=${c.slug}`}
+                class="group flex h-full flex-col justify-between gap-8 p-6 transition-colors duration-hover ease-editorial hover:bg-paper-2"
+              >
+                <div class="flex items-baseline justify-between gap-4">
+                  <span class="font-display text-lg group-hover:text-bronze-700">{c.title}</span>
+                  {c.titleAr && (
+                    <span lang="ar" dir="rtl" class="text-sm text-bronze-700">
+                      {c.titleAr}
+                    </span>
+                  )}
+                </div>
+                <p class="text-sm text-ink-2">{c.description}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>

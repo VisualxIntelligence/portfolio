@@ -1,0 +1,59 @@
+---
+import type { Project } from '../lib/types';
+import Tag from './Tag.astro';
+
+interface Props {
+  project: Project;
+  basePath?: string;
+  eager?: boolean;
+}
+const { project, basePath = '/work', eager = false } = Astro.props;
+const href = `${basePath}/${project.slug}`;
+---
+
+<article
+  class="reveal project-card group"
+  data-category={project.category?.slug}
+>
+  <a href={href} class="block">
+    <div class="relative aspect-[16/10] overflow-hidden rounded-md border border-line bg-paper-2">
+      {
+        project.heroImage && (
+          <img
+            src={project.heroImage.src}
+            alt={project.heroImage.alt}
+            width={project.heroImage.width ?? 1600}
+            height={project.heroImage.height ?? 1000}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            class="h-full w-full object-cover transition-transform duration-reveal ease-editorial group-hover:scale-[1.02]"
+          />
+        )
+      }
+      {
+        project.heroVideoUrl && (
+          <span class="absolute bottom-3 end-3 rounded-sm bg-ink/85 px-2 py-1 text-xs font-medium text-paper">
+            ▶ Video
+          </span>
+        )
+      }
+    </div>
+    <div class="mt-4 flex items-baseline justify-between gap-4">
+      <h3 class="font-display text-lg leading-snug transition-colors duration-hover ease-editorial group-hover:text-bronze-700">
+        {project.title}
+      </h3>
+      {project.year && <span class="shrink-0 text-xs text-neutral-500">{project.year}</span>}
+    </div>
+    {
+      project.titleAr && (
+        <p lang="ar" dir="rtl" class="mt-1 text-start text-sm text-bronze-700">
+          {project.titleAr}
+        </p>
+      )
+    }
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+      {project.category && <Tag class="border-bronze-300 text-bronze-700">{project.category.title}</Tag>}
+      {project.label && <Tag>Concept</Tag>}
+    </div>
+  </a>
+</article>

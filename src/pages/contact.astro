@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSettings } from '../lib/data';
+
+const settings = await getSettings();
+---
+
+<Base
+  title="Contact — Ahmed Albadri"
+  description="Get in touch with Ahmed Albadri for AI-first design roles and collaborations across the Middle East."
+>
+  <section class="mx-auto max-w-container px-6 pb-24 pt-16 lg:px-8">
+    <div class="grid gap-16 lg:grid-cols-2">
+      <header class="hero-fade">
+        <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+          <h1 class="font-display text-3xl md:text-4xl">Contact</h1>
+          <span lang="ar" dir="rtl" class="text-xl text-bronze-500">تواصل</span>
+        </div>
+        <p class="mt-6 max-w-prose text-lg text-ink-2">
+          Open to AI-first design roles and select collaborations across the Middle East. The form
+          opens a pre-filled email in your own mail app — nothing is stored on this site.
+        </p>
+        <dl class="mt-12 space-y-6">
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-lockup text-neutral-500">Email</dt>
+            <dd class="mt-1">
+              <a class="link-underline font-medium text-bronze-700" href={`mailto:${settings.email}`}>
+                {settings.email}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-lockup text-neutral-500">Elsewhere</dt>
+            <dd class="mt-1 flex gap-6">
+              {
+                settings.socials.map((s) => (
+                  <a class="link-underline font-medium text-bronze-700" href={s.url} rel="noopener">
+                    {s.label}
+                  </a>
+                ))
+              }
+            </dd>
+          </div>
+        </dl>
+      </header>
+
+      <!-- ContactForm island: mailto v1 (spec §1.4); Resend function is the v1.1 upgrade path. -->
+      <form id="contact-form" class="reveal rounded-md border border-line bg-paper-2 p-6 md:p-8">
+        <div class="space-y-6">
+          <div>
+            <label for="cf-name" class="block text-sm font-medium">Your name</label>
+            <input
+              id="cf-name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              class="mt-2 w-full rounded-sm border border-line bg-paper px-4 py-3 text-base placeholder:text-neutral-400 focus:border-bronze-500"
+              placeholder="Full name"
+            />
+          </div>
+          <div>
+            <label for="cf-subject" class="block text-sm font-medium">Subject</label>
+            <input
+              id="cf-subject"
+              name="subject"
+              type="text"
+              required
+              class="mt-2 w-full rounded-sm border border-line bg-paper px-4 py-3 text-base placeholder:text-neutral-400 focus:border-bronze-500"
+              placeholder="Role, project or question"
+            />
+          </div>
+          <div>
+            <label for="cf-message" class="block text-sm font-medium">Message</label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="6"
+              required
+              class="mt-2 w-full rounded-sm border border-line bg-paper px-4 py-3 text-base placeholder:text-neutral-400 focus:border-bronze-500"
+              placeholder="A few lines about what you have in mind"></textarea>
+          </div>
+          <button
+            type="submit"
+            class="inline-flex items-center gap-2 rounded-sm bg-ink px-6 py-3 font-display text-sm font-medium uppercase tracking-lockup text-paper transition-colors duration-hover ease-editorial hover:bg-bronze-700"
+          >
+            Compose email <span aria-hidden="true">→</span>
+          </button>
+          <p class="text-xs text-neutral-500">
+            Submitting opens your email client with the message pre-filled.
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script define:vars={{ email: settings.email }}>
+    document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const data = new FormData(form);
+      const subject = encodeURIComponent(`[Portfolio] ${data.get('subject')}`);
+      const body = encodeURIComponent(`${data.get('message')}\n\n— ${data.get('name')}`);
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    });
+  </script>
+</Base>

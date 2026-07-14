@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#1A1815"/>
+  <line x1="48" y1="72" x2="1552" y2="72" stroke="#2B2723" stroke-width="1"/>
+  <line x1="48" y1="928" x2="1552" y2="928" stroke="#2B2723" stroke-width="1"/>
+  
+      <path d="M 460 460 C 560 340, 680 580, 800 460 S 1040 340, 1140 460" fill="none" stroke="#A9744A" stroke-width="2.5"/>
+      <path d="M 460 510 C 560 390, 680 630, 800 510 S 1040 390, 1140 510" fill="none" stroke="#C89B72" stroke-width="1.5"/>
+  <text x="48" y="52" font-family="Space Grotesk, Arial, sans-serif" font-size="22" letter-spacing="2" fill="#C89B72">PROGRAMME FILM</text>
+  <text x="1552" y="52" text-anchor="end" font-family="IBM Plex Sans Arabic, Arial, sans-serif" font-size="24" fill="#F7F4EF">فيلم البرنامج</text>
+  <text x="48" y="966" font-family="Inter, Arial, sans-serif" font-size="16" fill="#C89B72">Placeholder plate — replace via Sanity Studio</text>
+</svg>

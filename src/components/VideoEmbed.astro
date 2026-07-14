@@ -1,0 +1,65 @@
+---
+/** Lite video embed: poster first, iframe injected on click (spec §1.4).
+ *  Keyboard-operable button with an accessible title (spec §2.6). */
+import { parseVideoUrl } from '../lib/video';
+
+interface Props {
+  url: string;
+  title: string;
+  poster?: string;
+  class?: string;
+}
+const { url, title, poster, class: className = '' } = Astro.props;
+const info = parseVideoUrl(url);
+const posterSrc = poster ?? info?.posterSrc;
+---
+
+{
+  info && (
+    <div
+      class:list={['lite-video group relative aspect-video overflow-hidden rounded-md bg-ink', className]}
+      data-embed-src={info.embedSrc}
+    >
+      {posterSrc ? (
+        <img
+          src={posterSrc}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-0 h-full w-full object-cover opacity-90"
+        />
+      ) : (
+        <div class="absolute inset-0 grid place-items-center bg-neutral-700">
+          <span class="font-display text-sm uppercase tracking-lockup text-bronze-300">{title}</span>
+        </div>
+      )}
+      <button
+        type="button"
+        class="absolute inset-0 grid w-full place-items-center"
+        title={`Play video: ${title}`}
+        aria-label={`Play video: ${title}`}
+      >
+        <span class="grid h-16 w-16 place-items-center rounded-full bg-paper/95 transition-transform duration-hover ease-editorial group-hover:scale-105">
+          <svg aria-hidden="true" width="20" height="22" viewBox="0 0 20 22" class="ms-1 fill-ink">
+            <path d="M0 0 L20 11 L0 22 Z" />
+          </svg>
+        </span>
+      </button>
+    </div>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.lite-video').forEach((wrap) => {
+    wrap.querySelector('button')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = wrap.dataset.embedSrc!;
+      iframe.title = wrap.querySelector('button')?.title ?? 'Video';
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 h-full w-full border-0';
+      wrap.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>

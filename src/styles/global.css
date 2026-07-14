@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens — spec §3.2 ─────────────────────────────────────── */
+:root {
+  --paper: #f7f4ef;
+  --paper-2: #efeae2;
+  --ink: #1a1815;
+  --ink-2: #4a4540;
+  --bronze-300: #c89b72;
+  --bronze: #a9744a;
+  --bronze-700: #7e5334;
+  --line: #ddd5c9;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-ar: 'IBM Plex Sans Arabic', sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background-color: var(--bronze-300);
+    color: var(--ink);
+  }
+
+  /* Visible focus ring — 2px ink, offset 2px (spec §2.6) */
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
+
+  /* Arabic text: never letter-spaced, +10% line-height vs Latin (spec §2.2) */
+  [lang='ar'] {
+    font-family: var(--font-ar);
+    letter-spacing: 0 !important;
+    line-height: 1.75;
+  }
+}
+
+@layer components {
+  /* Underline-grow link treatment (spec §2.5) */
+  .link-underline {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background-color: var(--bronze);
+    transform: scaleX(0);
+    transform-origin: var(--underline-origin, left);
+    transition: transform 150ms var(--ease);
+  }
+  [dir='rtl'] .link-underline::after {
+    --underline-origin: right;
+  }
+  .link-underline:hover::after,
+  .link-underline[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* Editorial hairline rule */
+  .hairline {
+    border-block-end: 1px solid var(--line);
+  }
+}
+
+@layer utilities {
+  /* Scroll reveal: opacity + translateY(8px), 250ms (spec §2.5).
+     Gated on html.js so content is never hidden without JavaScript. */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 250ms var(--ease),
+      transform 250ms var(--ease);
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Page-hero fade, 400ms */
+  .hero-fade {
+    animation: hero-fade 400ms var(--ease) both;
+  }
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .tracking-lockup {
+    letter-spacing: 0.08em;
+  }
+}
+
+/* Reduced motion: no reveals, no hero fade, no smooth scroll (spec §2.5) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .hero-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,133 @@
+---
+/** Universal case-study body (spec §2.4): CaseHero (video- or image-led), MetaRow,
+ *  Prose, ProcessSteps, PromptExcerpts, BeforeAfterSlider, GalleryGrid, PrevNextNav. */
+import type { Project } from '../lib/types';
+import { renderPortableText } from '../lib/portableText';
+import MetaRow from './MetaRow.astro';
+import VideoEmbed from './VideoEmbed.astro';
+import GalleryGrid from './GalleryGrid.astro';
+import BeforeAfterSlider from './BeforeAfterSlider.astro';
+import ProcessSteps from './ProcessSteps.astro';
+import PromptExcerpt from './PromptExcerpt.astro';
+import PrevNextNav from './PrevNextNav.astro';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  project: Project;
+  prev?: Project;
+  next?: Project;
+  basePath?: string;
+  showProcess?: boolean;
+}
+const { project, prev, next, basePath = '/work', showProcess = false } = Astro.props;
+const bodyHtml = renderPortableText(project.body);
+const extraVideos = project.videoUrls ?? [];
+---
+
+<article class="mx-auto max-w-container px-6 pb-24 pt-16 lg:px-8">
+  <!-- CaseHero -->
+  <header class="hero-fade">
+    <p class="text-xs font-medium uppercase tracking-lockup text-bronze-700">
+      {project.category?.title}
+    </p>
+    <div class="mt-4 flex flex-wrap items-baseline justify-between gap-4">
+      <h1 class="max-w-[22ch] font-display text-3xl md:text-4xl">{project.title}</h1>
+      {
+        project.titleAr && (
+          <p lang="ar" dir="rtl" class="text-xl text-bronze-500 md:text-2xl">
+            {project.titleAr}
+          </p>
+        )
+      }
+    </div>
+    {project.summary && <p class="mt-6 max-w-prose text-lg text-ink-2">{project.summary}</p>}
+  </header>
+
+  <div class="mt-12">
+    {
+      project.heroVideoUrl ? (
+        <VideoEmbed url={project.heroVideoUrl} title={project.title} class="hero-fade" />
+      ) : (
+        project.heroImage && (
+          <img
+            src={project.heroImage.src}
+            alt={project.heroImage.alt}
+            width={project.heroImage.width ?? 1600}
+            height={project.heroImage.height ?? 1000}
+            loading="eager"
+            decoding="async"
+            class="hero-fade w-full rounded-md border border-line object-cover"
+          />
+        )
+      )
+    }
+  </div>
+
+  <div class="mt-12">
+    <MetaRow {project} />
+  </div>
+
+  {
+    bodyHtml && (
+      <div
+        class="prose-editorial reveal mt-16 max-w-prose space-y-6 text-ink-2 [&_blockquote]:border-s-2 [&_blockquote]:border-bronze-500 [&_blockquote]:ps-4 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink [&_h3]:font-display [&_h3]:text-xl [&_h3]:text-ink [&_li]:ms-4 [&_ol]:list-decimal [&_ul]:list-disc"
+        set:html={bodyHtml}
+      />
+    )
+  }
+
+  {
+    showProcess && project.processSteps?.length ? (
+      <section class="mt-24" aria-labelledby="process">
+        <SectionHeading en="Process" ar="المنهجية" id="process" />
+        <ProcessSteps steps={project.processSteps} />
+      </section>
+    ) : null
+  }
+
+  {
+    showProcess && project.promptExcerpts?.length ? (
+      <section class="mt-24" aria-labelledby="prompts">
+        <SectionHeading en="Prompt Development" ar="تطوير الموجهات" id="prompts" />
+        <div class="space-y-6">
+          {project.promptExcerpts.map((text, i) => (
+            <PromptExcerpt {text} index={i} />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+
+  {
+    showProcess && project.beforeAfter ? (
+      <section class="mt-24" aria-labelledby="before-after">
+        <SectionHeading en="Before / After" ar="قبل وبعد" id="before-after" />
+        <BeforeAfterSlider before={project.beforeAfter.before} after={project.beforeAfter.after} />
+      </section>
+    ) : null
+  }
+
+  {
+    extraVideos.length > 0 && (
+      <section class="mt-24" aria-labelledby="videos">
+        <SectionHeading en="Video" ar="فيديو" id="videos" />
+        <div class="space-y-8">
+          {extraVideos.map((url, i) => (
+            <VideoEmbed {url} title={`${project.title} — video ${i + 1}`} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    project.gallery?.length ? (
+      <section class="mt-24" aria-labelledby="gallery">
+        <SectionHeading en="Selected Plates" ar="لوحات مختارة" id="gallery" />
+        <GalleryGrid images={project.gallery} />
+      </section>
+    ) : null
+  }
+
+  <PrevNextNav {prev} {next} {basePath} />
+</article>

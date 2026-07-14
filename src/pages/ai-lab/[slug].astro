@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { getAiLabProjects } from '../../lib/data';
+import type { Project } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const projects = await getAiLabProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, prev: projects[i + 1], next: projects[i - 1] },
+  }));
+}
+
+interface Props {
+  project: Project;
+  prev?: Project;
+  next?: Project;
+}
+const { project, prev, next } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.title,
+  description: project.summary,
+  creator: { '@type': 'Person', name: 'Ahmed Albadri' },
+};
+---
+
+<Base
+  title={`${project.title} — AI Lab — Ahmed Albadri`}
+  description={project.summary ?? project.title}
+  ogImage={project.heroImage?.src}
+  type="article"
+  {schema}
+>
+  <CaseStudy {project} {prev} {next} basePath="/ai-lab" showProcess={true} />
+</Base>

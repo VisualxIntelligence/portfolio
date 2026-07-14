@@ -1,0 +1,30 @@
+---
+import type { Project } from '../lib/types';
+import HonestyLabel from './HonestyLabel.astro';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+
+const cells: { term: string; value: string }[] = [
+  project.client && { term: 'Client', value: project.client },
+  project.year && { term: 'Year', value: String(project.year) },
+  project.category && { term: 'Category', value: project.category.title },
+  project.tools?.length && { term: 'Tools', value: project.tools.join(' · ') },
+].filter(Boolean) as { term: string; value: string }[];
+---
+
+<div class="reveal border-y border-line py-6">
+  <dl class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      cells.map(({ term, value }) => (
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-lockup text-neutral-500">{term}</dt>
+          <dd class="mt-1 text-sm text-ink">{value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  {project.label && <HonestyLabel label={project.label} class="mt-6" />}
+</div>
