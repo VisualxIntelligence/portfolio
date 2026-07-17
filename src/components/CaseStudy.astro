@@ -11,6 +11,7 @@ import ProcessSteps from './ProcessSteps.astro';
 import PromptExcerpt from './PromptExcerpt.astro';
 import PrevNextNav from './PrevNextNav.astro';
 import SectionHeading from './SectionHeading.astro';
+import DocumentList from './DocumentList.astro';
 
 interface Props {
   project: Project;
@@ -125,6 +126,15 @@ const extraVideos = project.videoUrls ?? [];
       <section class="mt-24" aria-labelledby="gallery">
         <SectionHeading en="Selected Plates" ar="لوحات مختارة" id="gallery" />
         <GalleryGrid images={project.gallery} />
+      </section>
+    ) : null
+  }
+
+  {
+    project.documents?.length ? (
+      <section class="mt-24" aria-labelledby="documents">
+        <SectionHeading en="Documents & Downloads" ar="الوثائق والتنزيلات" id="documents" />
+        <DocumentList documents={project.documents} />
       </section>
     ) : null
   }

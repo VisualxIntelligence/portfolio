@@ -88,3 +88,43 @@ for (const [name, opts] of plates) {
   writeFileSync(join(outDir, `${name}.svg`), plate(opts));
 }
 console.log(`Wrote ${plates.length} placeholder plates to public/placeholders/`);
+
+// A tiny but valid one-page PDF, so the "Documents & downloads" case-study
+// feature has a seed file to demonstrate. Byte offsets are computed for a
+// correct xref table (all content is ASCII).
+function buildPdf(lines) {
+  const objs = [
+    '<</Type/Catalog/Pages 2 0 R>>',
+    '<</Type/Pages/Kids[3 0 R]/Count 1>>',
+    '<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>',
+    '<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>',
+  ];
+  let content = 'BT /F1 22 Tf 60 760 Td 30 TL\n';
+  for (const l of lines) content += `(${l.replace(/([()\\])/g, '\\$1')}) Tj T*\n`;
+  content += 'ET';
+  objs.push(`<</Length ${content.length}>>\nstream\n${content}\nendstream`);
+
+  let pdf = '%PDF-1.4\n';
+  const offsets = [];
+  objs.forEach((o, i) => {
+    offsets.push(pdf.length);
+    pdf += `${i + 1} 0 obj\n${o}\nendobj\n`;
+  });
+  const xrefStart = pdf.length;
+  pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
+  for (const off of offsets) pdf += `${String(off).padStart(10, '0')} 00000 n \n`;
+  pdf += `trailer\n<</Size ${objs.length + 1}/Root 1 0 R>>\nstartxref\n${xrefStart}\n%%EOF`;
+  return pdf;
+}
+
+writeFileSync(
+  join(outDir, 'sample-report.pdf'),
+  buildPdf([
+    'MADAR LOOP',
+    'Executive Summary (placeholder)',
+    '',
+    'Self-initiated concept - demonstration of capability.',
+    'Replace with the real report via Sanity Studio.',
+  ]),
+);
+console.log('Wrote sample-report.pdf to public/placeholders/');

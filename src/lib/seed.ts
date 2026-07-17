@@ -146,6 +146,15 @@ export const seedProjects: Project[] = [
       ph('gallery-c', 'English spread with editorial grid and bronze rules'),
       ph('gallery-b', 'Arabic spread, fully mirrored RTL layout'),
     ],
+    documents: [
+      {
+        title: 'MADAR LOOP — Executive Summary',
+        kind: 'Bilingual PDF report',
+        url: '/placeholders/sample-report.pdf',
+        ext: 'pdf',
+        size: 727,
+      },
+    ],
     summary:
       'A designed PDF report with genuinely mirrored AR–EN spreads — same grid, same hierarchy, two reading directions — proving document production depth beyond decks.',
     body: paragraphs(

@@ -107,6 +107,36 @@ export default defineType({
       group: 'media',
       of: [defineArrayMember({ type: 'url' })],
     }),
+    defineField({
+      name: 'documents',
+      title: 'Documents & downloads',
+      type: 'array',
+      group: 'media',
+      description: 'Reports, presentations, PDFs and other files shown as downloads on the case study.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'document',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
+            defineField({
+              name: 'file',
+              title: 'File',
+              type: 'file',
+              options: { accept: '.pdf,.doc,.docx,.ppt,.pptx,.key,.xls,.xlsx' },
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'kind',
+              title: 'Kind',
+              type: 'string',
+              description: 'Optional label, e.g. "Executive summary", "Presentation", "Brand guide".',
+            }),
+          ],
+          preview: { select: { title: 'title', subtitle: 'kind' } },
+        }),
+      ],
+    }),
     defineField({ name: 'summary', title: 'Summary', type: 'text', rows: 4, group: 'content' }),
     defineField({
       name: 'body',

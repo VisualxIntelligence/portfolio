@@ -36,6 +36,14 @@ export interface PTBlock {
   markDefs?: { _key: string; _type: string; href?: string }[];
 }
 
+export interface ProjectDocument {
+  title: string;
+  kind?: string;
+  url: string;
+  ext?: string;
+  size?: number;
+}
+
 export interface Project {
   title: string;
   titleAr?: string;
@@ -49,6 +57,7 @@ export interface Project {
   heroVideoUrl?: string;
   gallery?: Img[];
   videoUrls?: string[];
+  documents?: ProjectDocument[];
   summary?: string;
   body?: PTBlock[];
   tools?: string[];

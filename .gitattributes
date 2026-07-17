@@ -1,0 +1,12 @@
+# Keep binary assets byte-exact — never apply line-ending conversion.
+# (Our generated PDF is mostly ASCII, so git would otherwise misdetect it as text.)
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.mp4 binary

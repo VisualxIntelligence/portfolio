@@ -60,6 +60,7 @@ const PROJECT_FIELDS = `
   title, titleAr, slug, tags, year, client, label, heroVideoUrl, videoUrls,
   summary, body, tools, featured, publishedAt, promptExcerpts,
   heroImage { ..., "alt": alt }, gallery[] { ..., "alt": alt },
+  documents[] { title, kind, "url": file.asset->url, "ext": file.asset->extension, "size": file.asset->size },
   processSteps[] { step, description, image { ..., "alt": alt } },
   beforeAfter { before { ..., "alt": alt }, after { ..., "alt": alt } },
   category-> { title, titleAr, slug, order, description }

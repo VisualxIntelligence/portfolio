@@ -57,6 +57,25 @@ async function uploadImage(publicPath, alt) {
   return { _type: 'image', asset: { _type: 'reference', _ref: assetCache.get(filename) }, alt };
 }
 
+async function uploadFile(publicPath) {
+  const file = join(root, 'public', publicPath.replace(/^\//, ''));
+  const filename = basename(file);
+  if (!assetCache.has(filename)) {
+    const existing = await client.fetch(
+      `*[_type == "sanity.fileAsset" && originalFilename == $f][0]._id`,
+      { f: filename },
+    );
+    if (existing) {
+      assetCache.set(filename, existing);
+    } else {
+      const asset = await client.assets.upload('file', createReadStream(file), { filename });
+      assetCache.set(filename, asset._id);
+      console.log(`  uploaded file ${filename}`);
+    }
+  }
+  return { _type: 'file', asset: { _type: 'reference', _ref: assetCache.get(filename) } };
+}
+
 const block = (text) => ({
   _type: 'block',
   _key: key(),
@@ -198,6 +217,15 @@ async function buildProjects() {
       gallery: [
         { ...(await g('gallery-c', 'English spread with editorial grid and bronze rules')), _key: key() },
         { ...(await g('gallery-b', 'Arabic spread, fully mirrored RTL layout')), _key: key() },
+      ],
+      documents: [
+        {
+          _type: 'document',
+          _key: key(),
+          title: 'MADAR LOOP — Executive Summary',
+          kind: 'Bilingual PDF report',
+          file: await uploadFile('/placeholders/sample-report.pdf'),
+        },
       ],
       summary:
         'A designed PDF report with genuinely mirrored AR–EN spreads — same grid, same hierarchy, two reading directions — proving document production depth beyond decks.',
