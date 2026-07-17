@@ -49,11 +49,18 @@ function mapProject(p: any): Project {
     heroImage: img(p.heroImage),
     gallery: p.gallery?.map((g: any) => img(g)).filter(Boolean),
     processSteps: p.processSteps?.map((s: any) => ({ ...s, image: img(s.image, 1200) })),
-    beforeAfter:
-      p.beforeAfter?.before && p.beforeAfter?.after
-        ? { before: img(p.beforeAfter.before, 1200)!, after: img(p.beforeAfter.after, 1200)! }
-        : undefined,
+    beforeAfter: mapBeforeAfter(p.beforeAfter),
   };
+}
+
+/** Only produce a before/after pair when BOTH images actually resolve — a
+ *  half-filled field in the Studio (alt text but no uploaded image) otherwise
+ *  yields undefined src values and crashes the slider. */
+function mapBeforeAfter(ba: any): Project['beforeAfter'] {
+  if (!ba) return undefined;
+  const before = img(ba.before, 1200);
+  const after = img(ba.after, 1200);
+  return before && after ? { before, after } : undefined;
 }
 
 const PROJECT_FIELDS = `
