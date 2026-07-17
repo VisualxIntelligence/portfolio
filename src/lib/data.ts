@@ -141,13 +141,17 @@ export async function getSettings(): Promise<SiteSettings> {
   const row = await client.fetch(
     `*[_type == "siteSettings"][0] {
       heroHeadline, heroHeadlineAr, montageVideoUrl, email, footerLine,
-      socials[] { label, url }
+      socials[] { label, url },
+      "cvUrl": cv.asset->url
     }`,
   );
   if (!row) {
     console.warn('[data] Sanity has no siteSettings document yet — using seed content.');
     return seedSettings;
   }
+  // Sanity serves file assets cross-origin, where the <a download> attribute is
+  // ignored; the ?dl= param sets Content-Disposition so the CV still downloads.
+  if (row.cvUrl) row.cvUrl = `${row.cvUrl}?dl=Ahmed-Albadri-CV.pdf`;
   // Drop null fields so seed defaults survive partially-filled settings.
   const clean = Object.fromEntries(Object.entries(row).filter(([, v]) => v != null));
   return { ...seedSettings, ...clean };

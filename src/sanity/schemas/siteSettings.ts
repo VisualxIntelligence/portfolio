@@ -30,6 +30,14 @@ export default defineType({
       type: 'string',
       initialValue: 'Based in Riyadh · Working across the Middle East',
     }),
+    defineField({
+      name: 'cv',
+      title: 'CV / Résumé (PDF)',
+      type: 'file',
+      options: { accept: '.pdf' },
+      description:
+        'Upload the downloadable CV shown on the About and Contact pages. Until one is uploaded, the site falls back to the PDF committed at public/cv/.',
+    }),
   ],
   preview: { prepare: () => ({ title: 'Site Settings' }) },
 });

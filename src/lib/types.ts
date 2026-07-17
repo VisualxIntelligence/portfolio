@@ -93,4 +93,6 @@ export interface SiteSettings {
   email: string;
   socials: Social[];
   footerLine: string;
+  /** Resolved URL of the downloadable CV (Sanity file, or the static repo fallback). */
+  cvUrl: string;
 }

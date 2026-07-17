@@ -273,4 +273,5 @@ export const seedSettings: SiteSettings = {
     { label: 'Behance', url: 'https://www.behance.net/' },
   ],
   footerLine: 'Based in Riyadh · Working across the Middle East',
+  cvUrl: '/cv/Ahmed-Albadri-CV.pdf',
 };
