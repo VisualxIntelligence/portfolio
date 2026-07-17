@@ -116,7 +116,7 @@ export default defineType({
       of: [
         defineArrayMember({
           type: 'object',
-          name: 'document',
+          name: 'projectDocument',
           fields: [
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
             defineField({

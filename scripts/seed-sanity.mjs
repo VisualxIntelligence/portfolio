@@ -220,7 +220,7 @@ async function buildProjects() {
       ],
       documents: [
         {
-          _type: 'document',
+          _type: 'projectDocument',
           _key: key(),
           title: 'MADAR LOOP — Executive Summary',
           kind: 'Bilingual PDF report',
