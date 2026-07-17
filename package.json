@@ -6,6 +6,7 @@
   "description": "Portfolio of Ahmed Albadri — AI-first graphic designer & multimedia specialist. Astro 4 + Tailwind + Sanity.",
   "scripts": {
     "dev": "astro dev",
+    "dev:clean": "node -e \"require('fs').rmSync('node_modules/.vite',{recursive:true,force:true})\" && astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

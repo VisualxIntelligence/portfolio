@@ -45,9 +45,25 @@ The site runs in one of two modes, decided by `PUBLIC_SANITY_PROJECT_ID`:
 While the dataset is empty (or any content type has no documents yet), builds fall back
 to the local seed for that type, so the site never ships blank sections.
 
-> Dev note: `astro.config.mjs` sets `SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1` — without it
-> the embedded Studio's dev route loops Vite's dependency optimizer
-> ("504 Outdated Optimize Dep" on `/admin`). Keep it.
+### Editing content — prefer the deployed Studio
+
+The `/admin` Studio on the **deployed site** (Vercel) is a production build and is rock
+solid — **use it for all day-to-day content editing** (uploading the CV, adding projects,
+etc.). It writes to the same Sanity dataset.
+
+The **local** `/admin` runs through Vite's dev dependency optimizer, which — because the
+Sanity Studio is a very large bundle — can intermittently fail after a schema edit or a
+cold start with errors like _"Failed to fetch dynamically imported module …/.vite/deps/…"_
+or _"504 Outdated Optimize Dep"_. It is usually self-healing (the Studio auto-reloads). If
+it gets stuck, reset the dev dependency cache:
+
+```bash
+npm run dev:clean   # clears node_modules/.vite, then starts the dev server
+```
+
+Then hard-refresh the browser once (Ctrl/Cmd+Shift+R). Related config knobs in
+`astro.config.mjs`, both dev-only and required — keep them: `SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1`
+and `optimizeDeps.include: ['react-is']`.
 
 ## Deploying to Vercel
 
