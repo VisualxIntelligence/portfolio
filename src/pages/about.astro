@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import Button from '../components/Button.astro';
 import Tag from '../components/Tag.astro';
 import { getCertifications, getSettings } from '../lib/data';
 
@@ -51,9 +50,6 @@ const personSchema = {
         agentic side of the workflow — the Claude skills I build and run — lives on the
         <a href="/skills" class="link-underline text-bronze-700">Skills</a> page.
       </p>
-      <div class="mt-10">
-        <Button href="/cv.pdf">Download CV</Button>
-      </div>
     </header>
 
     <!-- ToolStack -->
@@ -78,6 +74,24 @@ const personSchema = {
     <!-- CertGrid -->
     <section class="mt-24" aria-labelledby="certs">
       <SectionHeading en="Certifications" ar="الشهادات" id="certs" />
+      <div class="reveal mb-10">
+        <a
+          href="/cv/Ahmed-Albadri-CV.pdf"
+          download
+          class="link-underline inline-flex items-center gap-2 text-lg font-medium text-bronze-700"
+        >
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path
+              d="M9 2v9m0 0 3.25-3.25M9 11 5.75 7.75M3 14.5h12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Download CV <span class="text-sm text-neutral-500">(PDF)</span>
+        </a>
+      </div>
       <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           certs.map((cert) => (
