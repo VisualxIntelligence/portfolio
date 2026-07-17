@@ -15,9 +15,10 @@ const dataset = env.PUBLIC_SANITY_DATASET ?? 'production';
 const sanityEnabled = Boolean(projectId);
 
 // @sanity/astro's module-dedupe plugin aliases `sanity`/`styled-components` in
-// dev, which loops Vite's dep optimizer here ("504 Outdated Optimize Dep" on
-// /admin). The integration provides this escape hatch; production builds are
-// unaffected either way.
+// dev; its lazy discovery of `sanity/structure` loops Vite's optimizer ("504
+// Outdated Optimize Dep" on /admin). Disabling it is the integration's own
+// escape hatch and the only combination that boots the Studio cleanly here.
+// Production builds bundle with Rollup and are unaffected.
 process.env.SANITY_ASTRO_DISABLE_MODULE_DEDUPE ??= '1';
 
 // Static output in both modes: content changes redeploy via the Sanity → Vercel
@@ -43,5 +44,10 @@ export default defineConfig({
   ],
   vite: {
     css: { transformer: 'postcss' },
+    // With module-dedupe disabled, Vite serves `react-is` (a CJS module) without
+    // a default export, which crashes the Studio's hydration. Pre-bundling just
+    // this leaf module restores the CJS→ESM default interop without pulling in
+    // the `sanity`/`styled-components` tree. Dev-only.
+    optimizeDeps: sanityEnabled ? { include: ['react-is'] } : {},
   },
 });
