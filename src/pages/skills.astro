@@ -69,20 +69,20 @@ const skills = await getSkills();
                 </a>
               )}
             </div>
-            <div>
-              {skill.demoVideoUrl ? (
-                <VideoEmbed url={skill.demoVideoUrl} title={`Demo: ${skill.name}`} />
-              ) : skill.screenshots?.length ? (
+            <div class="space-y-6">
+              {skill.demoVideoUrl && <VideoEmbed url={skill.demoVideoUrl} title={`Demo: ${skill.name}`} />}
+              {skill.screenshots?.map((shot) => (
                 <img
-                  src={skill.screenshots[0].src}
-                  alt={skill.screenshots[0].alt}
-                  width={skill.screenshots[0].width ?? 1200}
-                  height={skill.screenshots[0].height ?? 750}
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={shot.width ?? 1200}
+                  height={shot.height ?? 750}
                   loading="lazy"
                   decoding="async"
                   class="w-full rounded-md border border-line object-cover"
                 />
-              ) : (
+              ))}
+              {!skill.demoVideoUrl && !skill.screenshots?.length && (
                 <div class="grid aspect-video place-items-center rounded-md border border-dashed border-line text-sm text-neutral-500">
                   Demo recording coming soon
                 </div>
